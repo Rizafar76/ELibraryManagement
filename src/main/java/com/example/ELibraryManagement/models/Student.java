@@ -48,7 +48,6 @@ public class Student implements Serializable {
     private Date updatedOn;
 
     @OneToMany(mappedBy = "student",fetch = FetchType.EAGER)
-//    @JsonIgnoreProperties("student")
     @JsonIgnore
     private List<Transaction> transactions;
 

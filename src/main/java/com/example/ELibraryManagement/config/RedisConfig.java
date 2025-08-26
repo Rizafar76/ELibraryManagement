@@ -15,9 +15,8 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(
-                "redis-16115.crce206.ap-south-1-1.ec2.redns.redis-cloud.com",16115
-        );
-        redisStandaloneConfiguration.setPassword("C2hhqgbIOTGuBhNrvFotWS0gvB9jGYn5");
+                "redis-17614.c305.ap-south-1-1.ec2.redns.redis-cloud.com",17614);
+        redisStandaloneConfiguration.setPassword("qnF2fvIdQ9JakZCsHvsxwN3FJb1KyLk7");
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
         return lettuceConnectionFactory;
     }
@@ -30,8 +29,7 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
 
-//        redisTemplate.setHashKeySerializer(new  StringRedisSerializer());
-//        redisTemplate.setHashValueSerializer(new JdkSerializationRedisSerializer());
+
 
         return redisTemplate;
     }

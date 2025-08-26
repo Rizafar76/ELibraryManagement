@@ -18,7 +18,7 @@ public class StudentController {
     @Autowired
     StudentService studentService;
 
-    @PostMapping("/add") // /user/signup
+    @PostMapping("/add") // /user/signup(student)
     public Long addStudent(@RequestBody CreateStudentRequest createStudentRequest) {
         return this.studentService.createStudent(createStudentRequest.toStudent());
     }
@@ -35,6 +35,8 @@ public class StudentController {
         Authentication authentication = securityContext.getAuthentication();
         User user = (User)authentication.getPrincipal();
         Long id = user.getStudent().getId();
+
+        //Getting Authentication and authorization details from Spring security Context.
 
         return this.studentService.getStudent(id);
     }

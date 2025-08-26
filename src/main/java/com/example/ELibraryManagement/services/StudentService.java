@@ -41,7 +41,7 @@ public class StudentService {
         * 4. attach student and user
         * 5. save student and return id
         * */
-//        return this.studentRepository.save(student).getId();
+
     }
 
     public GetStudentResponse getStudent(Long id) {
@@ -76,7 +76,7 @@ public class StudentService {
         JSONObject incomingStudent = mapper.convertValue(incoming, JSONObject.class);
         JSONObject savedStudent = mapper.convertValue(existing, JSONObject.class);
 
-        Iterator it = incomingStudent.keySet().iterator();  // id, name, email, mobile .....
+        Iterator it = incomingStudent.keySet().iterator();
         while (it.hasNext()) {
             String key = (String) it.next();
             if (incomingStudent.get(key) != null) {

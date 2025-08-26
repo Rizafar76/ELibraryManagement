@@ -170,7 +170,5 @@ public class TransactionService {
         return 0;
     }
 
-    public int sumWithIncrement(int a, int b){
-        return a+b+1;
-    }
+
 }

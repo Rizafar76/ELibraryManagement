@@ -18,7 +18,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Override
+
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.userRepository.findById(username).orElse(null);
     }

@@ -32,7 +32,7 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities(){
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(authorities.name()));
-//        grantedAuthorities.add(new SimpleGrantedAuthority(Authority.ADMIN.name()));
+
         return grantedAuthorities;
     }
 

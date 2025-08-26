@@ -15,7 +15,7 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
-    @PostMapping("/add") // /user/signup
+    @PostMapping("/add") // /user/signup(another admin)
     public Long addAdmin(@RequestBody CreateAdminRequest createAdminRequest) {
         return this.adminService.createAdmin(createAdminRequest.toAdmin());
     }
