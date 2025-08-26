@@ -2,6 +2,7 @@ package com.example.ELibraryManagement.services;
 
 import com.example.ELibraryManagement.models.Authority;
 import com.example.ELibraryManagement.models.User;
+import com.example.ELibraryManagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

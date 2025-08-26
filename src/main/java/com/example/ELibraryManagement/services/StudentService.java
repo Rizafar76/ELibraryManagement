@@ -56,7 +56,6 @@ public class StudentService {
         }
 
         student = this.studentRepository.findById(id).orElse(null);
-//        TODO :- Create a parallel thread for inserting in redis.
         this.studentRedisRepository.add(student);
         return GetStudentResponse.builder().student(student).build();
     }
