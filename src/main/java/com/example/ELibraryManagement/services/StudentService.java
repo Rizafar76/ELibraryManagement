@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
-public class StudentService {
+public class StudentService{
 
     @Autowired
     private StudentRepository studentRepository;
@@ -44,6 +46,9 @@ public class StudentService {
 
     }
 
+    private final ExecutorService executor = Executors.newFixedThreadPool(5);
+
+
     public GetStudentResponse getStudent(Long id) {
 
         Student student = this.studentRedisRepository.get(id);
@@ -56,7 +61,11 @@ public class StudentService {
         }
 
         student = this.studentRepository.findById(id).orElse(null);
-        this.studentRedisRepository.add(student);
+
+        if(student!=null) {                //parallel thread
+            Student s2 = student;
+            executor.submit(() -> this.studentRedisRepository.add(s2));
+        }
         return GetStudentResponse.builder().student(student).build();
     }
 
@@ -71,6 +80,7 @@ public class StudentService {
         return GetStudentResponse.builder().student(updatedStudent).build();
 
     }
+
 
     private Student merge(Student existing, Student incoming) {
         JSONObject incomingStudent = mapper.convertValue(incoming, JSONObject.class);
