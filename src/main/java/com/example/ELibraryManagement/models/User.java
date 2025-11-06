@@ -31,10 +31,12 @@ public class User implements UserDetails {
 
     public Collection<? extends GrantedAuthority> getAuthorities(){
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(authorities.name()));
+        if(authorities!=null)
+            grantedAuthorities.add(new SimpleGrantedAuthority(authorities.name()));
 
         return grantedAuthorities;
     }
+
 
     @OneToOne(mappedBy = "user")
     @JsonIgnoreProperties("user")
@@ -46,9 +48,4 @@ public class User implements UserDetails {
 
 }
 
-/* Mapping
-* User <-> Admin.  1:1
-*
-* User <-> Student  1:1
-*
-* */
+

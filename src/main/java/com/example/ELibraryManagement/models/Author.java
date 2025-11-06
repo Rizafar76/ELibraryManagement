@@ -25,12 +25,13 @@ public class Author implements Serializable {
 
     private String name;
 
+
     private String email;
 
     @CreationTimestamp
     private Date createdOn;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author",fetch = FetchType.EAGER)
     @JsonIgnoreProperties("author")
     private List<Book> books;
 }

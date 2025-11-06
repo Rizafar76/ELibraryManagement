@@ -18,7 +18,7 @@ public class StudentController {
     @Autowired
     StudentService studentService;
 
-    @PostMapping("/add") // /user/signup(student)
+    @PostMapping("/add")          // /user/signup(student)
     public Long addStudent(@RequestBody CreateStudentRequest createStudentRequest) {
         return this.studentService.createStudent(createStudentRequest.toStudent());
     }
@@ -48,6 +48,7 @@ public class StudentController {
         User user = (User)authentication.getPrincipal();
         Long id = user.getStudent().getId();
         return this.studentService.updateStudent(updateStudentRequest.toStudent(),id);
+
     }
 
     @DeleteMapping("/deactivate")

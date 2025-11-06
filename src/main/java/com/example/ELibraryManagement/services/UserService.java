@@ -29,4 +29,5 @@ public class UserService implements UserDetailsService {
         user.setAuthorities(authority);
         return this.userRepository.save(user);
     }
+
 }

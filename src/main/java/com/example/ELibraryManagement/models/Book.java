@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
+//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,18 +29,17 @@ public class Book implements Serializable {
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @JsonIgnoreProperties("books")
-    private Author author;//jpa mapping
+    private Author author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @JsonIgnoreProperties("books")
     private Student student;
 
-    @OneToMany(mappedBy = "book")
-//    @JsonIgnoreProperties("book")
+    @OneToMany(mappedBy = "book",fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Transaction> transactions;
 

@@ -25,7 +25,7 @@ public class Admin {
     @CreationTimestamp
     private Date createdON;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @JsonIgnoreProperties("admin")
     private User user;

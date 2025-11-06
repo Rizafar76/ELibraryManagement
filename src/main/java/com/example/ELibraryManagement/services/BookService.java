@@ -7,6 +7,9 @@ import com.example.ELibraryManagement.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Service
 public class BookService {
 
@@ -26,6 +29,7 @@ public class BookService {
         return bookRepository.save(book).getId();
     }
 
+    private final ExecutorService executor = Executors.newFixedThreadPool(5);
     public Book getById(Long id) {
 
         Book book = this.bookRedisRepository.get(id);
@@ -36,7 +40,13 @@ public class BookService {
 
 
         book = this.bookRepository.findById(id).orElse(null);
-        this.bookRedisRepository.add(book);
+        if(book!=null) {
+            Book b = book;
+            executor.submit(()-> this.bookRedisRepository.add(b));
+
+            System.out.println("Current Thread" + Thread.currentThread().getName());
+
+        }
 
         return this.bookRepository.save(book);
     }

@@ -2,6 +2,7 @@ package com.example.ELibraryManagement.dtos;
 
 import com.example.ELibraryManagement.models.Gender;
 import com.example.ELibraryManagement.models.Student;
+import com.example.ELibraryManagement.models.User;
 import lombok.*;
 
 @Getter
@@ -19,6 +20,7 @@ public class UpdateStudentRequest {
     private String mobile;
 
     private Integer age;
+
 
     public Student toStudent(){
         return Student.builder()

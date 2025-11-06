@@ -24,12 +24,12 @@ public class Transaction implements Serializable {
 
     private String externalId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @JsonIgnoreProperties("transactions")
     private Student student;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @JsonIgnoreProperties("transactions")
     private Book book;

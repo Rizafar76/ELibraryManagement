@@ -2,9 +2,12 @@ package com.example.ELibraryManagement.services;
 
 import com.example.ELibraryManagement.models.*;
 import com.example.ELibraryManagement.repositories.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+//import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +34,7 @@ public class TransactionService {
     @Value("${fine.per.day}")
     private Integer finePerDay;
 
+    @Transactional
     public String initiate(Long studentId, Long bookId, TransactionType transactionType) throws Exception {
 
         switch (transactionType) {
@@ -43,7 +47,6 @@ public class TransactionService {
         }
     }
 
-
     //    1.get student
 //    2.get book
 //    3.validations
@@ -54,7 +57,9 @@ public class TransactionService {
 //    5. assign book to student
 //    6. make status as success
 //    7. if something went wrong make status as failed and handle accordingly
-    private String initiateIssuance(Long studentId, Long bookId) throws Exception {
+
+    @Transactional
+    private String initiateIssuance(Long studentId, Long bookId)  {
 //        ************DATA RETRIEVAL ****************
 
         Book book = this.bookService.getById(bookId);
@@ -63,18 +68,6 @@ public class TransactionService {
 
 //        *******VALIDATIONS **************
 
-        if(student == null){
-            throw new Exception("student not present");
-        }
-
-        if(book == null || book.getStudent() != null){
-            throw new Exception("book is not available for issuance");
-        }
-
-        List<Book> issuedBooks = student.getBooks();
-        if(issuedBooks != null && issuedBooks.size() > this.maxBooksAllowed){
-            throw new Exception("maxBooksAllowed exceeded");
-        }
 
 //        ######## Issuance Logic ############
 
@@ -90,25 +83,43 @@ public class TransactionService {
         this.transactionRepository.save(transaction);
 
         try {
-            book.setStudent(student);
-            book = this.bookService.saveBook(book);
+
+                if(student == null){
+                    throw new RuntimeException("student not present");
+                }
+
+                if(book == null || book.getStudent() != null){
+                    throw new RuntimeException("book is not available for issuance");
+                }
+
+                List<Book> issuedBooks = student.getBooks();
+                if(issuedBooks != null && issuedBooks.size() > this.maxBooksAllowed){
+                    throw new RuntimeException("maxBooksAllowed exceeded");
+                }
+
+                book.setStudent(student);
+            this.bookService.saveBook(book);
 
             transaction.setStatus(TransactionStatus.SUCCESS);
             this.transactionRepository.save(transaction);
-        }catch (Exception e){
+        }
+        catch (Exception e){
             transaction.setStatus(TransactionStatus.FAILED);
             this.transactionRepository.save(transaction);
+
 
             if(book.getStudent() != null){
                 book.setStudent(null);
             }
             this.bookService.saveBook(book);
+
         }
 
         return transaction.getExternalId();
     }
 
-    public String initiateReturn(Long studentId, Long bookId) throws Exception {
+    @Transactional
+    public String initiateReturn(Long studentId, Long bookId)  {
         //        ************DATA RETRIEVAL ****************
 
         Book book = this.bookService.getById(bookId);
@@ -116,15 +127,6 @@ public class TransactionService {
 
         //        *******VALIDATIONS **************
 
-        if(student == null){
-            throw new Exception("student not present");
-        }
-
-        if(book == null || book.getStudent() == null || book.getStudent().getId() != studentId){
-            throw new Exception("book is not available for return");
-        }
-
-//        Return Logic
         Transaction transaction = Transaction
                 .builder()
                 .book(book)
@@ -137,16 +139,26 @@ public class TransactionService {
         this.transactionRepository.save(transaction);
 
         try {
+            if(student == null){
+                throw new RuntimeException("student not present");
+            }
+
+            if(book == null || book.getStudent() == null || !(book.getStudent().getId().equals(studentId))){
+                throw new RuntimeException("book is not available for return");
+            }
             int fine = getFine(book,student);
             book.setStudent(null);
             book = this.bookService.saveBook(book);
 
             transaction.setFine(fine);
             transaction.setStatus(TransactionStatus.SUCCESS);
+
             this.transactionRepository.save(transaction);
         }catch (Exception e){
             transaction.setStatus(TransactionStatus.FAILED);
-            this.transactionRepository.save(transaction);
+            this.transactionRepository.saveAndFlush(transaction);
+
+
             if(book.getStudent() == null){
                 book.setStudent(student);
                 book = this.bookService.saveBook(book);
